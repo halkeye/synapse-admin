@@ -81,7 +81,7 @@ const FormBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-const LoginPage = () => {
+const LoginPage = ({ cfg_base_url }) => {
   const login = useLogin();
   const notify = useNotify();
   const [loading, setLoading] = useState(false);
@@ -89,7 +89,6 @@ const LoginPage = () => {
   const [locale, setLocale] = useLocaleState();
   const translate = useTranslate();
   const base_url = localStorage.getItem("base_url");
-  const cfg_base_url = process.env.REACT_APP_SERVER;
   const [ssoBaseUrl, setSSOBaseUrl] = useState("");
   const loginToken = /\?loginToken=([a-zA-Z0-9_-]+)/.exec(window.location.href);
 
@@ -247,7 +246,7 @@ const LoginPage = () => {
             name="base_url"
             component={renderInput}
             label="synapseadmin.auth.base_url"
-            disabled={cfg_base_url || loading}
+            disabled={cfg_base_url != null || loading}
             resettable
             fullWidth
             className="input"
