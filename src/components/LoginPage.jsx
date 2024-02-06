@@ -7,6 +7,7 @@ import {
   useLogin,
   useNotify,
   useLocaleState,
+  useStoreContext,
   useTranslate,
   PasswordInput,
   TextInput,
@@ -84,11 +85,12 @@ const FormBox = styled(Box)(({ theme }) => ({
 const LoginPage = ({ cfg_base_url }) => {
   const login = useLogin();
   const notify = useNotify();
+  const store = useStoreContext();
   const [loading, setLoading] = useState(false);
   const [supportPassAuth, setSupportPassAuth] = useState(true);
   const [locale, setLocale] = useLocaleState();
   const translate = useTranslate();
-  const base_url = localStorage.getItem("base_url");
+  const base_url = store.getItem("base_url");
   const [ssoBaseUrl, setSSOBaseUrl] = useState("");
   const loginToken = /\?loginToken=([a-zA-Z0-9_-]+)/.exec(window.location.href);
 
@@ -101,8 +103,8 @@ const LoginPage = ({ cfg_base_url }) => {
       "",
       window.location.href.replace(loginToken[0], "#").split("#")[0]
     );
-    const baseUrl = localStorage.getItem("sso_base_url");
-    localStorage.removeItem("sso_base_url");
+    const baseUrl = store.getItem("sso_base_url");
+    store.removeItem("sso_base_url");
     if (baseUrl) {
       const auth = {
         base_url: baseUrl,
@@ -168,7 +170,7 @@ const LoginPage = ({ cfg_base_url }) => {
   };
 
   const handleSSO = () => {
-    localStorage.setItem("sso_base_url", ssoBaseUrl);
+    store.setItem("sso_base_url", ssoBaseUrl);
     const ssoFullUrl = `${ssoBaseUrl}/_matrix/client/r0/login/sso/redirect?redirectUrl=${encodeURIComponent(
       window.location.href
     )}`;
